@@ -1,7 +1,9 @@
 <template>
     <div class="w-full">
         <div class="flex h-screen">
-            <div class="bg-[#FAFAFA] basis-full md:basis-1/4 p-6 pr-2">
+            <div
+                class="bg-[#FAFAFA] basis-full md:max-w-[400px] md:basis-1/4 p-6 pr-2"
+            >
                 <NuxtIcon
                     name="logo"
                     class="w-[150px] block h-[43px] mb-[88px]"
@@ -24,6 +26,11 @@
                         type="text"
                         placeholder="Search people or messages"
                     />
+                </div>
+
+                <div class="space-y-6">
+                    <MessageItem />
+                    <MessageItem />
                 </div>
             </div>
             <div class="hidden md:block md:basis-3/4">
