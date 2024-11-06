@@ -10,11 +10,15 @@
     "postinstall": "nuxt prepare"
   },
   "dependencies": {
+    "@nuxt/icon": "^1.6.1",
     "@nuxtjs/tailwindcss": "^6.12.2",
     "animate.css": "^4.1.1",
     "nuxt": "^3.13.2",
-    "nuxt-icons": "^3.2.1",
     "vue": "latest",
     "vue-router": "latest"
+  },
+  "devDependencies": {
+    "@iconify-json/iconoir": "^1.2.3",
+    "@iconify-json/uil": "^1.2.1"
   }
 }
