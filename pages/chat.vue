@@ -26,7 +26,7 @@
             class="h-16 flex items-center sm:space-x-3 justify-between md:space-x-11 py-5 md:mx-9 absolute right-0 left-0 bottom-0"
         >
             <button
-                class="text-primary px-3 py-2 rounded hover:bg-[#eee] transition-colors"
+                class="text-primary p-3 rounded-full hover:bg-[#eee] transition-colors"
             >
                 <Icon
                     class="align-middle"
@@ -41,7 +41,7 @@
             />
 
             <button
-                class="text-primary px-3 py-2 rounded hover:bg-[#eee] transition-colors"
+                class="text-primary p-3 rounded-full hover:bg-[#eee] transition-colors"
             >
                 <Icon class="align-middle" name="iconoir:send" size="24px" />
             </button>

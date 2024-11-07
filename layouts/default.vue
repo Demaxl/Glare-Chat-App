@@ -29,8 +29,8 @@
                 </div>
 
                 <div class="space-y-6">
-                    <MessageItem />
-                    <MessageItem />
+                    <ChatListItem />
+                    <ChatListItem />
                 </div>
             </div>
             <div
