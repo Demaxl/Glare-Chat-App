@@ -12,6 +12,7 @@ export default {
                 "glare-gray": "#4F5665",
                 "glare-white": "#FBFBFD",
                 "glare-green": "#21978B",
+                "glare-dark-green": "#156761",
                 "glare-purple": "#7B7FEA",
                 "glare-dark-purple": "#3D3F79",
                 primary: "#21978B",

@@ -25,3 +25,25 @@
         @apply text-h6;
     }
 }
+
+@layer components {
+    .glare-scrollbar::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .glare-scrollbar::-webkit-scrollbar-track {
+        @apply bg-gray-200 rounded-full;
+    }
+
+    .glare-scrollbar::-webkit-scrollbar-thumb {
+        @apply bg-primary rounded-full;
+    }
+
+    .glare-scrollbar::-webkit-scrollbar-thumb:hover {
+        @apply bg-glare-dark-green;
+    }
+    /* .glare-scrollbar { */
+    /* scrollbar-width: thin; */
+    /* scrollbar-color: theme("colors.gray.400") theme("colors.gray.200"); */
+    /* } */
+}

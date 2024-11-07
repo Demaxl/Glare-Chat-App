@@ -7,7 +7,7 @@
             </p>
 
             <button
-                class="py-[18px] px-12 bg-primary hover:bg-[#156761] transition-colors tracking-wide text-button-2 rounded-[100px] text-white"
+                class="py-[18px] px-12 bg-primary hover:bg-glare-dark-green transition-colors tracking-wide text-button-2 rounded-[100px] text-white"
             >
                 New Message
             </button>

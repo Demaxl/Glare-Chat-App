@@ -1,5 +1,5 @@
 <template>
-    <div class="h-screen md:px-9 relative">
+    <div class="h-screen pl-3 md:pl-9 relative">
         <div class="py-3 flex items-center">
             <nuxt-link
                 to="/"
@@ -19,6 +19,31 @@
                     >
                     <span class="text-caption text-glare-gray">@suzana</span>
                 </div>
+            </div>
+        </div>
+        <div
+            ref="messages-container"
+            class="overflow-y-auto h-[80vh] pb-10 glare-scrollbar pr-3 md:pr-9"
+        >
+            <div class="space-y-2 pt-16">
+                <MessageItem
+                    v-for="message in messages"
+                    :key="message.id"
+                    :text="message.text"
+                    :userIsSender="message.userIsSender"
+                />
+                <MessageItem
+                    v-for="message in messages"
+                    :key="message.id"
+                    :text="message.text"
+                    :userIsSender="message.userIsSender"
+                />
+                <MessageItem
+                    v-for="message in messages"
+                    :key="message.id"
+                    :text="message.text"
+                    :userIsSender="message.userIsSender"
+                />
             </div>
         </div>
 
@@ -48,3 +73,33 @@
         </div>
     </div>
 </template>
+
+<script setup>
+const messages = [
+    {
+        text: "next time you'll be awake at this hour why not now",
+        userIsSender: false,
+    },
+    {
+        text: `Didn't I tell you not to put your phone on charge just because it's the weekend?`,
+        userIsSender: false,
+    },
+    {
+        text: "i woke up calmnnn i put it on the charger the phone was turned off next to me i took it out while i was sleeping hsadfkagshdfgsajf i slept early girl i slept at 3",
+        userIsSender: true,
+    },
+    {
+        text: "While you win in love, you continue to win in other things dhdhdhdh",
+        userIsSender: true,
+    },
+];
+
+const messagesContainer = useTemplateRef("messages-container");
+const { y: messagesContainerScrollY } = useScroll(messagesContainer, {
+    behavior: "smooth",
+});
+
+onMounted(() => {
+    messagesContainerScrollY.value = messagesContainer.value.scrollHeight;
+});
+</script>
