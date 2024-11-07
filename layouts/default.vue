@@ -33,7 +33,10 @@
                     <MessageItem />
                 </div>
             </div>
-            <div :class="{ hidden: !isChatView }" class="md:block md:basis-3/4">
+            <div
+                :class="{ hidden: !isChatView, 'basis-full': isChatView }"
+                class="md:block md:basis-3/4"
+            >
                 <slot />
             </div>
         </div>

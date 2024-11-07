@@ -36,6 +36,9 @@ export default {
                 caption: ["12px", { lineHeight: "19px" }],
                 overline: ["18px", { lineHeight: "28px" }],
             },
+            screens: {
+                xs: "576px",
+            },
         },
     },
     plugins: [],

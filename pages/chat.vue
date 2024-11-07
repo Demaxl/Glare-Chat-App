@@ -1,6 +1,12 @@
 <template>
-    <div class="h-screen px-9 relative">
-        <div class="py-3">
+    <div class="h-screen md:px-9 relative">
+        <div class="py-3 flex items-center">
+            <nuxt-link
+                to="/"
+                class="me-5 text-glare-green rounded-full p-2 hover:bg-[#eee] transition-colors"
+            >
+                <Icon name="uil:arrow-left" size="36px" class="align-middle" />
+            </nuxt-link>
             <div class="flex space-x-3">
                 <img
                     class="w-9 h-9"
@@ -17,7 +23,7 @@
         </div>
 
         <div
-            class="h-16 flex items-center space-x-11 py-5 mx-9 absolute right-0 left-0 bottom-0"
+            class="h-16 flex items-center sm:space-x-3 justify-between md:space-x-11 py-5 md:mx-9 absolute right-0 left-0 bottom-0"
         >
             <button
                 class="text-primary px-3 py-2 rounded hover:bg-[#eee] transition-colors"
