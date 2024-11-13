@@ -62,7 +62,7 @@ INSTALLED_APPS = [
 
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
-
+    'users',
     'rest_framework',
     'chat'
 ]
@@ -200,3 +200,7 @@ HEADLESS_FRONTEND_URLS = {
 }
 
 SITE_ID = 1
+
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
