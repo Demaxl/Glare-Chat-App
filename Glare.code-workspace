@@ -1,11 +1,14 @@
 {
-	"folders": [
-		{
-			"path": "backend"
-		},
-		{
-			"path": "frontend"
-		}
-	],
-	"settings": {}
+    "folders": [
+        {
+            "path": "backend"
+        },
+        {
+            "path": "frontend"
+        },
+        {
+            "path": "../../Code/Nuxt/Nuxt Dojo"
+        }
+    ],
+    "settings": {}
 }

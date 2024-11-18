@@ -14,6 +14,7 @@
     "@nuxtjs/tailwindcss": "^6.12.2",
     "animate.css": "^4.1.1",
     "nuxt": "^3.13.2",
+    "vee-validate": "^4.14.7",
     "vue": "latest",
     "vue-router": "latest"
   },
