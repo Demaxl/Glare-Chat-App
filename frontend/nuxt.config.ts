@@ -2,7 +2,12 @@
 export default defineNuxtConfig({
     compatibilityDate: "2024-04-03",
     devtools: { enabled: true },
-    modules: ["@nuxtjs/tailwindcss", "@nuxt/icon", "@vueuse/nuxt"],
+    modules: [
+        "@nuxtjs/tailwindcss",
+        "@nuxt/icon",
+        "@vueuse/nuxt",
+        "@vee-validate/nuxt",
+    ],
     css: ["~/assets/css/fonts.css", "animate.css/animate.min.css"],
     icon: {
         customCollections: [
