@@ -7,6 +7,8 @@ export default defineNuxtConfig({
         "@nuxt/icon",
         "@vueuse/nuxt",
         "@vee-validate/nuxt",
+        "@pinia/nuxt",
+        "pinia-plugin-persistedstate/nuxt",
     ],
     css: ["~/assets/css/fonts.css", "animate.css/animate.min.css"],
     icon: {
@@ -18,8 +20,6 @@ export default defineNuxtConfig({
         ],
     },
     runtimeConfig: {
-        // public: {
         backendURL: "http://127.0.0.1:8000",
-        // },
     },
 });
