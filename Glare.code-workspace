@@ -8,6 +8,9 @@
         },
         {
             "path": "../../Code/Nuxt/Nuxt Dojo"
+        },
+        {
+            "path": "../../Code/Nuxt/Nuxt Router Middleware"
         }
     ],
     "settings": {}

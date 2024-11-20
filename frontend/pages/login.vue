@@ -86,6 +86,9 @@
 
 <script setup>
 import { object, string } from "yup";
+import useAuth from "~/composables/useAuth";
+
+const router = useRouter();
 
 const initialValues = {
     username: "",
@@ -97,10 +100,18 @@ const schema = object({
     password: string().required(),
 });
 
-async function onSubmit(values, { setErrors }) {
-    await new Promise((r) => setTimeout(r, 1000));
-    setErrors({ username: "Invalid username" });
-    console.log(values);
-    // alert(values);
+async function onSubmit({ username, password }, { setErrors }) {
+    try {
+        const response = await useAuth().login(username, password);
+        router.push("/");
+    } catch (error) {
+        switch (error.statusCode) {
+            case 400:
+                setErrors({
+                    username: "Invalid username or password",
+                });
+                break;
+        }
+    }
 }
 </script>
