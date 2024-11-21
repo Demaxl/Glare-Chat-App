@@ -13,5 +13,7 @@
             "path": "../../Code/Nuxt/Nuxt Router Middleware"
         }
     ],
-    "settings": {}
+    "settings": {
+        "vue3snippets.enable-compile-vue-file-on-did-save-code": false
+    }
 }

@@ -95,13 +95,6 @@ definePageMeta({
         },
     ],
 });
-
-const sessionId = useCookie("sessionid");
-const authStore = useAuthStore();
-
-console.log(sessionId.value);
-console.log(authStore.userData);
-
 import { object, string } from "yup";
 import useAuth from "~/composables/useAuth";
 

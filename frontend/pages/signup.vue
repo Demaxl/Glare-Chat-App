@@ -113,6 +113,16 @@
 </template>
 
 <script setup>
+definePageMeta({
+    middleware: [
+        function (to, from) {
+            // If the user is authenticated, redirect to the home page
+            if (useAuth().isAuthenticated()) {
+                return navigateTo("/");
+            }
+        },
+    ],
+});
 import { object, string, ref } from "yup";
 
 const initialValues = {
@@ -132,16 +142,27 @@ const schema = object({
         .max(10, "Username cannot be more than 10 characters"),
     password: string()
         .required()
-        .min(8, "Password must be at least 8 characters"),
+        .min(8, "Password must be at least 8 characters")
+        .matches(/.*[^0-9].*/, "Password cannot be entirely numeric"),
     password2: string()
         .oneOf([ref("password"), null], "Passwords must match")
         .required("Confirm password is required"),
 });
 
-async function onSubmit(values, { setErrors }) {
-    await new Promise((r) => setTimeout(r, 1000));
-    setErrors({ username: "Invalid username" });
-    console.log(values);
-    // alert(values);
+async function onSubmit({ username, password }, { setFieldError }) {
+    const { status, errors, data } = await useAuth().signup(username, password);
+
+    switch (status) {
+        case 200:
+            navigateTo("/");
+            break;
+        case 400:
+            errors.forEach((error) => {
+                setFieldError(error.param, error.message);
+            });
+            break;
+        default:
+            break;
+    }
 }
 </script>

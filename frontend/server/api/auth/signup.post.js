@@ -7,7 +7,7 @@ export default defineEventHandler(async (event) => {
 
     try {
         const response = await useRequest(backendURL).post(
-            "/_allauth/browser/v1/auth/login",
+            "/_allauth/browser/v1/auth/signup",
             {
                 username,
                 password,
@@ -30,13 +30,13 @@ export default defineEventHandler(async (event) => {
             expires,
         });
 
-        return { status: 200, error: null, data: response._data };
+        return { status: 200, error: [], data: response._data };
     } catch (error) {
         switch (error.status) {
             case 400:
                 return {
                     status: 400,
-                    error: "Invalid username or password",
+                    errors: error.data.errors,
                     data: null,
                 };
                 break;
@@ -45,6 +45,6 @@ export default defineEventHandler(async (event) => {
                 break;
         }
 
-        return { status: 500, error: "Internal server error", data: null };
+        return { status: 500, error: ["Internal server error"], data: null };
     }
 });
