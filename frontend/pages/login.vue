@@ -85,6 +85,23 @@
 </template>
 
 <script setup>
+definePageMeta({
+    middleware: [
+        function (to, from) {
+            // If the user is authenticated, redirect to the home page
+            if (useAuth().isAuthenticated()) {
+                return navigateTo("/");
+            }
+        },
+    ],
+});
+
+const sessionId = useCookie("sessionid");
+const authStore = useAuthStore();
+
+console.log(sessionId.value);
+console.log(authStore.userData);
+
 import { object, string } from "yup";
 import useAuth from "~/composables/useAuth";
 

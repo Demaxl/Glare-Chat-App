@@ -3,8 +3,13 @@ export const useAuthStore = defineStore(
     () => {
         const userData = ref(null);
 
+        function $reset() {
+            userData.value = null;
+        }
+
         return {
             userData,
+            $reset,
         };
     },
     {
