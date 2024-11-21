@@ -16,10 +16,21 @@ export default defineEventHandler(async (event) => {
 
         const cookies = response.headers.getSetCookie();
 
+        const sessionCookie = cookies.find((cookie) =>
+            cookie.includes("sessionid")
+        );
+        const expiresMatch = sessionCookie.match(/expires=([^;]+)/i);
+        const expires = expiresMatch ? new Date(expiresMatch[1]) : undefined;
+
+        console.log(expires);
+
         /* Attach each cookie to our incoming Request */
         for (const cookie of cookies) {
             appendResponseHeader(event, "set-cookie", cookie);
         }
+        setCookie(event, "isLoggedIn", true, {
+            expires,
+        });
 
         return { status: 200, error: null, data: response._data };
     } catch (error) {

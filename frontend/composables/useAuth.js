@@ -17,8 +17,8 @@ export default function () {
     }
 
     function isAuthenticated() {
-        const sessionId = useCookie("sessionid");
-        return sessionId.value !== undefined;
+        const isLoggedIn = useCookie("isLoggedIn");
+        return !!isLoggedIn.value;
     }
 
     return { login, isAuthenticated };

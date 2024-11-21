@@ -1,9 +1,16 @@
 <script setup>
+definePageMeta({
+    middleware() {
+        const sessionId = useCookie("sessionid");
+        sessionId.value = null;
+    },
+});
+
 onMounted(() => {
-    const sessionId = useCookie("sessionid");
+    const isLoggedIn = useCookie("isLoggedIn");
     const authStore = useAuthStore();
 
-    sessionId.value = null;
+    isLoggedIn.value = null;
     authStore.$reset();
 
     // Redirect to the login page
