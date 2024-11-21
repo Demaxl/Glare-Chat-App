@@ -4,7 +4,7 @@ export default function (baseURL = "") {
     }
 
     async function post(url, data) {
-        return await $fetch(baseURL + url, {
+        return await $fetch.raw(baseURL + url, {
             method: "POST",
             body: data,
         });

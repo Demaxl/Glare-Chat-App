@@ -101,17 +101,19 @@ const schema = object({
 });
 
 async function onSubmit({ username, password }, { setErrors }) {
-    try {
-        const response = await useAuth().login(username, password);
-        router.push("/");
-    } catch (error) {
-        switch (error.statusCode) {
-            case 400:
-                setErrors({
-                    username: "Invalid username or password",
-                });
-                break;
-        }
+    const { data, status, error } = await useAuth().login(username, password);
+
+    switch (status) {
+        case 200:
+            router.push("/");
+            break;
+        case 400:
+            setErrors({
+                username: error,
+            });
+            break;
+        default:
+            break;
     }
 }
 </script>

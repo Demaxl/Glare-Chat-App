@@ -2,17 +2,24 @@ export default function () {
     const { userData } = storeToRefs(useAuthStore());
 
     async function login(username, password) {
-        const response = await useRequest().post("/api/auth/login", {
+        const {
+            _data: { data, status, error },
+        } = await useRequest().post("/api/auth/login", {
             username,
             password,
         });
 
-        if (response.status === 200) {
+        if (status === 200) {
             // Save the user data to the store
-            userData.value = response.data.user;
+            userData.value = data.data.user;
         }
-        return response;
+        return { status, error, data };
     }
 
-    return { login };
+    function isAuthenticated() {
+        const sessionId = useCookie("sessionid");
+        return sessionId.value !== undefined;
+    }
+
+    return { login, isAuthenticated };
 }
