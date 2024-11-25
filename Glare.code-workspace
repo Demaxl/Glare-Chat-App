@@ -1,11 +1,19 @@
 {
-	"folders": [
-		{
-			"path": "backend"
-		},
-		{
-			"path": "frontend"
-		}
-	],
-	"settings": {}
+    "folders": [
+        {
+            "path": "backend"
+        },
+        {
+            "path": "frontend"
+        },
+        {
+            "path": "../../Code/Nuxt/Nuxt Dojo"
+        },
+        {
+            "path": "../../Code/Nuxt/Nuxt Router Middleware"
+        }
+    ],
+    "settings": {
+        "vue3snippets.enable-compile-vue-file-on-did-save-code": false
+    }
 }

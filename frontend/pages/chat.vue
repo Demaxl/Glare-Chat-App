@@ -75,6 +75,10 @@
 </template>
 
 <script setup>
+definePageMeta({
+    layout: "chat",
+});
+
 const messages = [
     {
         text: "next time you'll be awake at this hour why not now",

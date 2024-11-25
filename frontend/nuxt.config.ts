@@ -2,7 +2,14 @@
 export default defineNuxtConfig({
     compatibilityDate: "2024-04-03",
     devtools: { enabled: true },
-    modules: ["@nuxtjs/tailwindcss", "@nuxt/icon", "@vueuse/nuxt"],
+    modules: [
+        "@nuxtjs/tailwindcss",
+        "@nuxt/icon",
+        "@vueuse/nuxt",
+        "@vee-validate/nuxt",
+        "@pinia/nuxt",
+        "pinia-plugin-persistedstate/nuxt",
+    ],
     css: ["~/assets/css/fonts.css", "animate.css/animate.min.css"],
     icon: {
         customCollections: [
@@ -11,5 +18,8 @@ export default defineNuxtConfig({
                 dir: "./assets/icons",
             },
         ],
+    },
+    runtimeConfig: {
+        backendURL: "http://127.0.0.1:8000",
     },
 });
