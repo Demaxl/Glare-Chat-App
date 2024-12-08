@@ -14,5 +14,6 @@ def message_factory(db, user_factory):
         message.save()
 
         message.content = content
+
         return message
     return create_message
