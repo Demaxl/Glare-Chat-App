@@ -106,12 +106,24 @@ ASGI_APPLICATION = "config.asgi.application"
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if env("POSTGRES_DB"):
+    DATABASES = {
+        'default': {
+            'ENGINE': env("DATABASE_ENGINE"),
+            'NAME': env("POSTGRES_DB"),
+            'USER': env("POSTGRES_USER"),
+            'PASSWORD': env("POSTGRES_PASSWORD"),
+            'HOST': env("POSTGRES_HOST"),
+            'PORT': env("POSTGRES_PORT")
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
 
 
 # Password validation
