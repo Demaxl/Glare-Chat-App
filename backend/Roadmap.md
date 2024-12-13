@@ -1,1 +1,1 @@
--   Add testing for websockets
+-   Look at that nuxt auth model in bookmark bar

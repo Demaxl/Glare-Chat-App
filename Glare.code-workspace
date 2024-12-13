@@ -23,6 +23,9 @@
         {
             "name": "Channels",
             "path": "../../Code/Channels"
+        },
+        {
+            "path": "."
         }
     ],
     "settings": {
