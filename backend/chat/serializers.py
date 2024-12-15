@@ -1,0 +1,72 @@
+from django.contrib.auth import get_user_model
+from rest_framework import serializers
+from .models import Message, TextMessage, AudioMessage, VideoMessage, ImageMessage
+
+
+class TextMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = TextMessage
+        fields = ['text']
+
+
+class AudioMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AudioMessage
+        fields = ['audio']
+
+
+class VideoMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = VideoMessage
+        fields = ['video']
+
+
+class ImageMessageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ImageMessage
+        fields = ['image']
+
+
+class MessageSerializer(serializers.ModelSerializer):
+    sender = serializers.SlugRelatedField(
+        slug_field='username',
+        queryset=get_user_model().objects.all()
+    )
+    receiver = serializers.SlugRelatedField(
+        slug_field='username',
+        queryset=get_user_model().objects.all()
+    )
+
+    content = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Message
+        fields = ['id', 'sender', 'receiver',
+                  'message_type', 'timestamp', 'content']
+
+    def get_content(self, obj):
+        """
+        Returns the appropriate content based on message_type
+        """
+        if obj.message_type == Message.TEXT:
+            serializer = TextMessageSerializer(obj.text_content)
+            return serializer.data.get('text')
+        elif obj.message_type == Message.AUDIO:
+            serializer = AudioMessageSerializer(obj.audio_content)
+            return serializer.data.get('audio')
+        elif obj.message_type == Message.VIDEO:
+            serializer = VideoMessageSerializer(obj.video_content)
+            return serializer.data.get('video')
+        elif obj.message_type == Message.IMAGE:
+            serializer = ImageMessageSerializer(obj.image_content)
+            return serializer.data.get('image')
+        return None
+
+    def create(self, validated_data):
+        content = self.context.get('content')
+        if not content:
+            raise serializers.ValidationError("Content is required")
+
+        message = Message.objects.create(**validated_data)
+        message.content = content  # This will use the content setter in the Message model
+        return message

@@ -1,16 +1,15 @@
 {
     "folders": [
         {
+            "name": "backend",
             "path": "backend"
         },
         {
+            "name": "frontend",
             "path": "frontend"
         },
         {
-            "path": "../../Code/Nuxt/Nuxt Dojo"
-        },
-        {
-            "path": "../../Code/Nuxt/Nuxt Router Middleware"
+            "path": "."
         }
     ],
     "settings": {
