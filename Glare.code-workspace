@@ -5,24 +5,8 @@
             "path": "backend"
         },
         {
-            "name": "backend",
-            "path": "../CareerConnect Web App/backend"
-        },
-        {
             "name": "frontend",
             "path": "frontend"
-        },
-        {
-            "name": "Nuxt Dojo",
-            "path": "../../Code/Nuxt/Nuxt Dojo"
-        },
-        {
-            "name": "Nuxt Router Middleware",
-            "path": "../../Code/Nuxt/Nuxt Router Middleware"
-        },
-        {
-            "name": "Channels",
-            "path": "../../Code/Channels"
         },
         {
             "path": "."
