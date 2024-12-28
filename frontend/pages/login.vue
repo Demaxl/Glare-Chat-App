@@ -85,18 +85,8 @@
 </template>
 
 <script setup>
-definePageMeta({
-    middleware: [
-        function (to, from) {
-            // If the user is authenticated, redirect to the home page
-            if (useAuth().isAuthenticated()) {
-                return navigateTo("/");
-            }
-        },
-    ],
-});
+definePageMeta({});
 import { object, string } from "yup";
-import useAuth from "~/composables/useAuth";
 
 const router = useRouter();
 
@@ -110,20 +100,5 @@ const schema = object({
     password: string().required(),
 });
 
-async function onSubmit({ username, password }, { setErrors }) {
-    const { data, status, error } = await useAuth().login(username, password);
-
-    switch (status) {
-        case 200:
-            router.push("/");
-            break;
-        case 400:
-            setErrors({
-                username: error,
-            });
-            break;
-        default:
-            break;
-    }
-}
+async function onSubmit({ username, password }, { setErrors }) {}
 </script>

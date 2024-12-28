@@ -113,16 +113,6 @@
 </template>
 
 <script setup>
-definePageMeta({
-    middleware: [
-        function (to, from) {
-            // If the user is authenticated, redirect to the home page
-            if (useAuth().isAuthenticated()) {
-                return navigateTo("/");
-            }
-        },
-    ],
-});
 import { object, string, ref } from "yup";
 
 const initialValues = {
@@ -149,20 +139,5 @@ const schema = object({
         .required("Confirm password is required"),
 });
 
-async function onSubmit({ username, password }, { setFieldError }) {
-    const { status, errors, data } = await useAuth().signup(username, password);
-
-    switch (status) {
-        case 200:
-            navigateTo("/");
-            break;
-        case 400:
-            errors.forEach((error) => {
-                setFieldError(error.param, error.message);
-            });
-            break;
-        default:
-            break;
-    }
-}
+async function onSubmit({ username, password }, { setFieldError }) {}
 </script>
