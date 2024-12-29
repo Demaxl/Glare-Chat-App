@@ -9,7 +9,6 @@ export default defineNuxtConfig({
         "@vee-validate/nuxt",
         "@pinia/nuxt",
         "pinia-plugin-persistedstate/nuxt",
-        "@workmate/nuxt-auth",
     ],
     css: ["~/assets/css/fonts.css", "animate.css/animate.min.css"],
     icon: {
