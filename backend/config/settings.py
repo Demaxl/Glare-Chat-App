@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 import environ
 import os
+from datetime import timedelta
 
 from pathlib import Path
 
@@ -55,7 +56,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # "django.contrib.sites",
+    "corsheaders",
 
+    'rest_framework',
+    'rest_framework.authtoken',
+    'dj_rest_auth',
+    'dj_rest_auth.registration',
+
+    'rest_framework_simplejwt.token_blacklist',
     'allauth',
     'allauth.account',
     'allauth.headless',
@@ -64,15 +73,16 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
     'users',
-    'rest_framework',
     'chat'
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -204,20 +214,21 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 
-CSRF_TRUSTED_ORIGINS = [
-    'https://yourfrontend.com',
-    'http://localhost:3000',  # For local development
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
 ]
 
-HEADLESS_ONLY = True
-# These are the URLs to be implemented by your single-page application.
-HEADLESS_FRONTEND_URLS = {
-    "account_confirm_email": "https://www.example.com/account/verify-email/{key}",
-    "account_reset_password_from_key": "https://www.example.com/account/password/reset/key/{key}",
-    "account_signup": "https://www.example.com/account/signup",
-    "socialaccount_login_error": "https://www.example.com/account/provider/callback",
-}
+CORS_ALLOW_CREDENTIALS = True
 
+
+HEADLESS_ONLY = True
+# # These are the URLs to be implemented by your single-page application.
+# HEADLESS_FRONTEND_URLS = {
+#     "account_confirm_email": "https://www.example.com/account/verify-email/{key}",
+#     "account_reset_password_from_key": "https://www.example.com/account/password/reset/key/{key}",
+#     "account_signup": "https://www.example.com/account/signup",
+#     "socialaccount_login_error": "https://www.example.com/account/provider/callback",
+# }
 SITE_ID = 1
 
 
@@ -232,4 +243,28 @@ CHANNEL_LAYERS = {
             "hosts": [("127.0.0.1", 6379)],
         },
     },
+}
+
+# Add REST Framework settings
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+
+    ],
+}
+
+# Add Simple JWT settings
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME':  timedelta(minutes=60),
+    'REFRESH_TOKEN_LIFETIME':  timedelta(days=7),
+    'ROTATE_REFRESH_TOKENS': True,
+    'BLACKLIST_AFTER_ROTATION': True,
+}
+
+# Update REST Auth settings
+REST_AUTH = {
+    'USE_JWT': True,
+    # 'JWT_AUTH_COOKIE': 'access_token',
+    # 'JWT_AUTH_REFRESH_COOKIE': 'refresh_token',
+    'JWT_AUTH_HTTPONLY': False,
 }
