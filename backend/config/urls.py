@@ -21,12 +21,10 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('allauth.urls')),
+    # Include the API endpoints:
+    path("_allauth/", include("allauth.headless.urls")),
 
-    path('auth/', include('dj_rest_auth.urls')),
-    path('auth/registration/', include('dj_rest_auth.registration.urls'))
-
-    # Social authentication
-    # path('auth/google/', include('allauth.socialaccount.urls')),
 ]
 
 if settings.DEBUG:
