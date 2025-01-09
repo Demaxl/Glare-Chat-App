@@ -116,6 +116,18 @@ const schema = object({
 });
 
 async function onSubmit({ username, password }, { setErrors }) {
-    await useAuthStore().login(username, password);
+    const response = await useAuthStore().login(username, password);
+
+    switch (response.status) {
+        case 200:
+            navigateTo("/");
+            break;
+        case 400:
+            setErrors({
+                username: "Invalid username or password",
+            });
+        default:
+            break;
+    }
 }
 </script>

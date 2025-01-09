@@ -22,22 +22,19 @@ export const useAuthStore = defineStore(
         }
 
         async function login(username, password) {
-            const response = await $axios.post(
-                "/_allauth/browser/v1/auth/login",
-                {
-                    username,
-                    password,
-                }
-            );
-
-            switch (response.status) {
-                case 200:
-                    userData.value = response.data.data.user;
-
-                    break;
+            try {
+                const response = await $axios.post(
+                    "/_allauth/browser/v1/auth/login",
+                    {
+                        username,
+                        password,
+                    }
+                );
+                userData.value = response.data.data.user;
+                return response;
+            } catch (error) {
+                return error.response;
             }
-
-            return response;
         }
 
         return { login, isAuthenticated, userData };
