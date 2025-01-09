@@ -1,12 +1,25 @@
 export const useAuthStore = defineStore(
     "auth",
     () => {
+        const { $axios } = useNuxtApp();
         /*
             State properties
         */
         const userData = ref(null);
 
-        const { $axios } = useNuxtApp();
+        async function isAuthenticated() {
+            try {
+                const response = await $axios.get(
+                    "/_allauth/browser/v1/auth/session"
+                );
+                // If the request succeeds, update the user data
+                userData.value = response.data.data.user;
+                return true;
+            } catch (error) {
+                userData.value = null;
+                return false;
+            }
+        }
 
         async function login(username, password) {
             const response = await $axios.post(
@@ -27,9 +40,11 @@ export const useAuthStore = defineStore(
             return response;
         }
 
-        return { login };
+        return { login, isAuthenticated, userData };
     },
     {
-        persist: true,
+        persist: {
+            storage: piniaPluginPersistedstate.localStorage(),
+        },
     }
 );

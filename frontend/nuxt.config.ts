@@ -19,9 +19,11 @@ export default defineNuxtConfig({
             },
         ],
     },
+    ssr: false,
+    spaLoadingTemplate: true,
     runtimeConfig: {
         public: {
-            backendURL: "http://127.0.0.1:8000",
+            backendURL: "http://localhost:8000",
         },
     },
 });

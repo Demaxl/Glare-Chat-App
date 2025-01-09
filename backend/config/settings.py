@@ -209,6 +209,10 @@ CORS_ALLOWED_ORIGINS = [
 ]
 CORS_ALLOW_CREDENTIALS = True
 
+
+SESSION_COOKIE_DOMAIN = "localhost"
+CSRF_COOKIE_DOMAIN = "localhost"
+
 CSRF_TRUSTED_ORIGINS = [
     'https://yourfrontend.com',
     'http://localhost:3000',  # For local development
