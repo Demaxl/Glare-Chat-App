@@ -20,6 +20,8 @@ export default defineNuxtConfig({
         ],
     },
     runtimeConfig: {
-        backendURL: "http://127.0.0.1:8000",
+        public: {
+            backendURL: "http://127.0.0.1:8000",
+        },
     },
 });

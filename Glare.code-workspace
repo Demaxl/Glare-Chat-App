@@ -2,6 +2,9 @@
     "folders": [
         {
             "path": "."
+        },
+        {
+            "path": "../CareerConnect Web App/frontend"
         }
     ],
     "settings": {

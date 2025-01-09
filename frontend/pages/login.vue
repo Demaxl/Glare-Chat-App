@@ -100,5 +100,7 @@ const schema = object({
     password: string().required(),
 });
 
-async function onSubmit({ username, password }, { setErrors }) {}
+async function onSubmit({ username, password }, { setErrors }) {
+    useAuthStore().login(username, password);
+}
 </script>
