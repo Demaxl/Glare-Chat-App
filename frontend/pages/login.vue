@@ -120,12 +120,14 @@ async function onSubmit({ username, password }, { setErrors }) {
 
     switch (response.status) {
         case 200:
+        case 409:
             navigateTo("/");
             break;
         case 400:
             setErrors({
                 username: "Invalid username or password",
             });
+            break;
         default:
             break;
     }
