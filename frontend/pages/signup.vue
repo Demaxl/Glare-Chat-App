@@ -139,5 +139,20 @@ const schema = object({
         .required("Confirm password is required"),
 });
 
-async function onSubmit({ username, password }, { setFieldError }) {}
+async function onSubmit({ username, password }, { setFieldError }) {
+    const response = await useAuthStore().signup(username, password);
+
+    switch (response.status) {
+        case 200:
+            navigateTo("/");
+            break;
+        case 400:
+            for (const error of response.data.errors) {
+                setFieldError(error.param, error.message);
+            }
+            break;
+        default:
+            break;
+    }
+}
 </script>

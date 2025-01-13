@@ -36,8 +36,23 @@ export const useAuthStore = defineStore(
                 return error.response;
             }
         }
+        async function signup(username, password) {
+            try {
+                const response = await $axios.post(
+                    "/_allauth/browser/v1/auth/signup",
+                    {
+                        username,
+                        password,
+                    }
+                );
+                userData.value = response.data.data.user;
+                return response;
+            } catch (error) {
+                return error.response;
+            }
+        }
 
-        return { login, isAuthenticated, userData };
+        return { login, signup, isAuthenticated, userData };
     },
     {
         persist: {
