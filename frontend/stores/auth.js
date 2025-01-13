@@ -36,6 +36,14 @@ export const useAuthStore = defineStore(
                 return error.response;
             }
         }
+        async function logout() {
+            try {
+                await $axios.delete("/_allauth/browser/v1/auth/session");
+            } catch (error) {
+            } finally {
+                userData.value = null;
+            }
+        }
         async function signup(username, password) {
             try {
                 const response = await $axios.post(
@@ -52,7 +60,7 @@ export const useAuthStore = defineStore(
             }
         }
 
-        return { login, signup, isAuthenticated, userData };
+        return { login, logout, signup, isAuthenticated, userData };
     },
     {
         persist: {

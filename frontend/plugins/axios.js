@@ -6,6 +6,9 @@ export default defineNuxtPlugin((nuxtApp) => {
     const axiosInstance = axios.create({
         baseURL: config.public.backendURL,
         withCredentials: true,
+        headers: {
+            "X-CSRFToken": useCookie("csrftoken").value,
+        },
     });
 
     return {
