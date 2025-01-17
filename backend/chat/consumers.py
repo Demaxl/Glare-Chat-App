@@ -70,10 +70,22 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     return
 
                 messages = await self.get_messages(self.user, receiver)
-                await self.send(text_data=json.dumps(messages))
+                await self.send(text_data=json.dumps({
+                    "type": message_type,
+                    "initial_messages": messages
+                }))
 
-            # Client sends a message to the receiver
+            # Client request for recent messages sent to/by them
+            case "chat.recent_messages":
+                messages = await self.get_recent_messages()
+                await self.send(text_data=json.dumps({
+                    "type": message_type,
+                    "recent_messages": messages
+                }))
+
             case "chat.message":
+                # Client sends a message to the receiver
+
                 receiver_username = text_data_json.get("receiver")
                 message = text_data_json.get("message")
 
@@ -107,6 +119,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
         return s.data
 
     @database_sync_to_async
+    def get_recent_messages(self):
+        # Get the recent messages sent by or to the user
+        queryset = Message.objects.filter(
+            Q(sender=self.user) | Q(receiver=self.user)
+        ).order_by('-timestamp')
+        s = MessageSerializer(queryset, many=True)
+        return s.data
+
+    @database_sync_to_async
     def save_message(self, message, receiver):
         # Save the message to the database
         message_obj = Message.objects.create(
@@ -120,6 +141,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def chat_message(self, event):
         # Send the message to the WebSocket
         await self.send(text_data=json.dumps({
+            "type": "chat.message",
             "message": event["message"],
             "sender": event["sender"],
             "timestamp": event['timestamp']

@@ -1,3 +1,3 @@
 -   fix actions pytest issue
--   re enable csrf
--   add logout button
+-   add backend validation to not send message to your self
+-   add loading spinner to chatlist items

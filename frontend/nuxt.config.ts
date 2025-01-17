@@ -24,6 +24,7 @@ export default defineNuxtConfig({
     runtimeConfig: {
         public: {
             backendURL: "http://localhost:8000",
+            websocketURL: "ws://localhost:8000/ws/chat/",
         },
     },
 });
