@@ -1,0 +1,3 @@
+-   fix actions pytest issue
+-   add backend validation to not send message to your self
+-   add loading spinner to chatlist items

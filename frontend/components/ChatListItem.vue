@@ -14,14 +14,14 @@
                     <div>
                         <span
                             class="mr-2 text-body-1 font-semibold text-glare-black"
-                            >Suzana Colin</span
+                            >{{ username }}</span
                         >
-                        <span class="text-button-3">@suzana</span>
+                        <!-- <span class="text-button-3">@suzana</span> -->
                     </div>
                     <p
                         class="text-[10px] leading-4 truncate md:max-w-[250px] max-w-[250px] sm:max-w-[500px]"
                     >
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
+                        <!-- Lorem ipsum dolor sit amet consectetur adipisicing elit.
                         Itaque dicta id, est quaerat, ea perspiciatis suscipit
                         quas, quis quisquam magnam aspernatur officiis. Esse
                         harum tempore eum consequuntur consectetur itaque dolore
@@ -35,20 +35,35 @@
                         est magnam! Mollitia qui veniam porro assumenda non
                         delectus officia. Molestiae deleniti soluta pariatur
                         veniam voluptate aspernatur, laboriosam possimus
-                        eligendi sed.
+                        eligendi sed. -->
+                        <span v-if="userIsSender">You:</span> {{ message }}
                     </p>
                 </div>
             </div>
-            <div class="text-[10px] leading-4 pl-2 text-nowrap">Dec 15</div>
+            <div class="text-[10px] leading-4 pl-2 text-nowrap">
+                {{ formattedDate }}
+            </div>
         </div>
     </nuxt-link>
 </template>
 
-<!-- <script setup>
-defineProps({
-    displayName: String,
+<script setup>
+const { timestamp } = defineProps({
+    // displayName: String,
     username: String,
-    recentMessage: String,
-    recentMessageDate: String,
+    message: String,
+    userIsSender: Boolean,
+    timestamp: String,
 });
-</script> -->
+
+// Parse the timestamp into a Date object
+const date = new Date(timestamp);
+
+// Format the date to "Month day" using Intl.DateTimeFormat
+const formattedDate = computed(() => {
+    return new Intl.DateTimeFormat("en-US", {
+        month: "short", // Short month name (e.g., "Jan", "Feb")
+        day: "numeric", // Day of the month
+    }).format(date);
+});
+</script>

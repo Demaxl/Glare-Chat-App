@@ -3,7 +3,13 @@
         <div
             class="mx-auto text-center bg-[#FAFAFA] tracking-wide p-8 rounded-2xl shadow-[0_0_20px_rgba(0,0,0,0.1)] w-[500px] max-w-xl"
         >
-            <Icon size="40px" name="icon:logo" class="block mx-auto mb-10" />
+            <nuxt-link to="/">
+                <Icon
+                    size="40px"
+                    name="icon:logo"
+                    class="block mx-auto mb-10"
+                />
+            </nuxt-link>
             <p class="font-bold text-subtitle-1 mb-3">Welcome Back</p>
 
             <p class="text-body-2 text-gl-glare-blacktracking-normal">
@@ -87,16 +93,15 @@
 <script setup>
 definePageMeta({
     middleware: [
-        function (to, from) {
+        async function (to, from) {
             // If the user is authenticated, redirect to the home page
-            if (useAuth().isAuthenticated()) {
+            if (await useAuthStore().isAuthenticated()) {
                 return navigateTo("/");
             }
         },
     ],
 });
 import { object, string } from "yup";
-import useAuth from "~/composables/useAuth";
 
 const router = useRouter();
 
@@ -111,15 +116,16 @@ const schema = object({
 });
 
 async function onSubmit({ username, password }, { setErrors }) {
-    const { data, status, error } = await useAuth().login(username, password);
+    const response = await useAuthStore().login(username, password);
 
-    switch (status) {
+    switch (response.status) {
         case 200:
-            router.push("/");
+        case 409:
+            navigateTo("/");
             break;
         case 400:
             setErrors({
-                username: error,
+                username: "Invalid username or password",
             });
             break;
         default:

@@ -29,8 +29,11 @@
                 </div>
 
                 <div class="space-y-6">
-                    <ChatListItem />
-                    <ChatListItem />
+                    <ChatListItem
+                        v-for="(message, index) in recentContacts"
+                        :key="index"
+                        v-bind="message"
+                    />
                 </div>
             </div>
             <div
@@ -44,8 +47,95 @@
 </template>
 
 <script setup>
+import { timestamp } from "@vueuse/core";
+
 const route = useRoute();
 const isChatView = computed(() => route.name === "chat");
+
+const { userData } = useAuthStore();
+
+const recentMessages = ref([]);
+// Goes through all recent messages to return the list of recently contacted users
+const recentContacts = computed(() => {
+    const contacts = [];
+    const chosen = new Set();
+
+    let username;
+    let userIsSender;
+    for (const message of recentMessages.value) {
+        // Get the username of the user that is not the current user
+        if (message.sender !== userData.username) {
+            // User received the message
+            username = message.sender;
+            userIsSender = false;
+        } else {
+            // User sent the message
+            username = message.receiver;
+            userIsSender = true;
+        }
+
+        // If the username is already in the list, skip it
+        if (chosen.has(username)) continue;
+        contacts.push({
+            username,
+            userIsSender,
+            message: message.content,
+            timestamp: message.timestamp,
+        });
+        chosen.add(username);
+    }
+    return contacts;
+});
+
+const deserialize = (message) => JSON.parse(message);
+function serialize(type = "chat.message", message = null, receiver = null) {
+    const payload = { type };
+    switch (type) {
+        case "chat.message":
+            payload.message = message;
+            payload.receiver = receiver;
+            break;
+
+        default:
+            break;
+    }
+    return JSON.stringify(payload);
+}
+
+const {
+    public: { websocketURL },
+} = useRuntimeConfig();
+
+const { status, data, send, open, close } = useWebSocket(websocketURL, {
+    autoReconnect: {
+        retries: 3,
+        delay: 1000,
+        onFailed() {
+            alert(
+                "Unable to connect to server. Please check your network connection and refresh."
+            );
+        },
+    },
+    onMessage() {
+        const response = deserialize(data.value);
+        switch (response.type) {
+            case "chat.recent_messages":
+                recentMessages.value = response.recent_messages;
+                break;
+            case "chat.intial_messages":
+                console.log(response.initial_messages);
+                break;
+            case "chat.message":
+                console.log(response.message);
+                break;
+            default:
+                break;
+        }
+    },
+});
+
+// Get recent messages of user after connection
+send(serialize("chat.recent_messages"));
 </script>
 
 <style>

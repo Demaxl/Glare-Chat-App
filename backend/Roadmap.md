@@ -1,2 +1,0 @@
--   fix actions pytest issue
--   Look at that nuxt auth model in bookmark bar

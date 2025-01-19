@@ -19,7 +19,12 @@ export default defineNuxtConfig({
             },
         ],
     },
+    ssr: false,
+    spaLoadingTemplate: true,
     runtimeConfig: {
-        backendURL: "http://127.0.0.1:8000",
+        public: {
+            backendURL: "http://localhost:8000",
+            websocketURL: "ws://localhost:8000/ws/chat/",
+        },
     },
 });

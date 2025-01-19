@@ -56,10 +56,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    "corsheaders",
     'allauth',
     'allauth.account',
     'allauth.headless',
-
 
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
@@ -69,10 +69,11 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    "corsheaders.middleware.CorsMiddleware",
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -203,6 +204,14 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+CORS_ALLOWED_ORIGINS = [
+    'http://localhost:3000',  # For local development
+]
+CORS_ALLOW_CREDENTIALS = True
+
+
+SESSION_COOKIE_DOMAIN = "localhost"
+CSRF_COOKIE_DOMAIN = "localhost"
 
 CSRF_TRUSTED_ORIGINS = [
     'https://yourfrontend.com',

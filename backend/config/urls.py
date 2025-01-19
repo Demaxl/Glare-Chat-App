@@ -24,6 +24,7 @@ urlpatterns = [
     path('accounts/', include('allauth.urls')),
     # Include the API endpoints:
     path("_allauth/", include("allauth.headless.urls")),
+    path("auth/", include("users.urls")),
 
 ]
 
