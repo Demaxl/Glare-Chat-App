@@ -76,9 +76,14 @@ const recentContacts = computed(() => {
 
         // If the username is already in the list, skip it
         if (chosen.has(username)) continue;
+
+        // Flag to check if the message is sent by the current user (a self message)
+        let messageIsSelf = message.sender === message.receiver ? true : false;
+
         contacts.push({
             username,
             userIsSender,
+            messageIsSelf,
             message: message.content,
             timestamp: message.timestamp,
         });

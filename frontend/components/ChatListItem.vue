@@ -1,5 +1,5 @@
 <template>
-    <nuxt-link to="/chat" class="block">
+    <nuxt-link :to="`/chat/${username}`" class="block">
         <div
             class="flex items-center text-glare-gray transition-colors cursor-pointer"
         >
@@ -14,28 +14,16 @@
                     <div>
                         <span
                             class="mr-2 text-body-1 font-semibold text-glare-black"
-                            >{{ username }}</span
+                            >{{
+                                messageIsSelf ? `${username} (You)` : username
+                            }}</span
                         >
+
                         <!-- <span class="text-button-3">@suzana</span> -->
                     </div>
                     <p
                         class="text-[10px] leading-4 truncate md:max-w-[250px] max-w-[250px] sm:max-w-[500px]"
                     >
-                        <!-- Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Itaque dicta id, est quaerat, ea perspiciatis suscipit
-                        quas, quis quisquam magnam aspernatur officiis. Esse
-                        harum tempore eum consequuntur consectetur itaque dolore
-                        saepe quos, tempora illum magni modi reprehenderit
-                        beatae officia vel officiis fugit asperiores ratione!
-                        Exercitationem, voluptatum deserunt nisi hic corrupti
-                        qui modi, quis accusantium accusamus provident
-                        voluptatibus dolore, dicta commodi quos earum! Sed
-                        doloribus rerum fugit? Quisquam nobis iusto similique
-                        minima amet reiciendis sed, quae, optio numquam error ad
-                        est magnam! Mollitia qui veniam porro assumenda non
-                        delectus officia. Molestiae deleniti soluta pariatur
-                        veniam voluptate aspernatur, laboriosam possimus
-                        eligendi sed. -->
                         <span v-if="userIsSender">You:</span> {{ message }}
                     </p>
                 </div>
@@ -52,6 +40,7 @@ const { timestamp } = defineProps({
     // displayName: String,
     username: String,
     message: String,
+    messageIsSelf: Boolean,
     userIsSender: Boolean,
     timestamp: String,
 });
