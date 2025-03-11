@@ -59,6 +59,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         text_data_json = json.loads(text_data)
         message_type = text_data_json.get("type")
+        message_id = text_data_json.get("messageId", None)
 
         match message_type:
             # Client requests for initial messages between the sender and receiver
@@ -71,6 +72,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
                 messages = await self.get_messages(self.user, receiver)
                 await self.send(text_data=json.dumps({
+                    "messageId": message_id,
                     "type": message_type,
                     "initial_messages": messages
                 }))
@@ -79,6 +81,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             case "chat.recent_messages":
                 messages = await self.get_recent_messages()
                 await self.send(text_data=json.dumps({
+                    "messageId": message_id,
                     "type": message_type,
                     "recent_messages": messages
                 }))

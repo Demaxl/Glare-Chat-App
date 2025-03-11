@@ -47,8 +47,6 @@
 </template>
 
 <script setup>
-import { timestamp } from "@vueuse/core";
-
 const route = useRoute();
 const isChatView = computed(() => route.name === "chat");
 
@@ -92,55 +90,44 @@ const recentContacts = computed(() => {
     return contacts;
 });
 
-const deserialize = (message) => JSON.parse(message);
-function serialize(type = "chat.message", message = null, receiver = null) {
-    const payload = { type };
-    switch (type) {
-        case "chat.message":
-            payload.message = message;
-            payload.receiver = receiver;
-            break;
+const { sendWithResponse, open } = useWebSocketStore();
 
-        default:
-            break;
-    }
-    return JSON.stringify(payload);
-}
+// Watch for incoming messages
+// watch(
+//     () => data.value,
+//     () => {
+//         console.log(data);
 
-const {
-    public: { websocketURL },
-} = useRuntimeConfig();
-
-const { status, data, send, open, close } = useWebSocket(websocketURL, {
-    autoReconnect: {
-        retries: 3,
-        delay: 1000,
-        onFailed() {
-            alert(
-                "Unable to connect to server. Please check your network connection and refresh."
-            );
-        },
-    },
-    onMessage() {
-        const response = deserialize(data.value);
-        switch (response.type) {
-            case "chat.recent_messages":
-                recentMessages.value = response.recent_messages;
-                break;
-            case "chat.intial_messages":
-                console.log(response.initial_messages);
-                break;
-            case "chat.message":
-                console.log(response.message);
-                break;
-            default:
-                break;
-        }
-    },
-});
+//         const response = deserialize(data.value);
+//         switch (response.type) {
+//             case "chat.recent_messages":
+//                 recentMessages.value = response.recent_messages;
+//                 break;
+//             case "chat.intial_messages":
+//                 console.log(response.initial_messages);
+//                 break;
+//             case "chat.message":
+//                 console.log(response.message);
+//                 break;
+//             default:
+//                 break;
+//         }
+//     }
+// );
 
 // Get recent messages of user after connection
-send(serialize("chat.recent_messages"));
+async function getRecentMessages() {
+    try {
+        const response = await sendWithResponse("chat.recent_messages");
+        recentMessages.value = response.recent_messages;
+    } catch (error) {
+        console.error("Failed to get recent messages:", error);
+    }
+}
+
+// Open the websocket connection
+open();
+getRecentMessages();
 </script>
 
 <style>
