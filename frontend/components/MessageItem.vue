@@ -5,7 +5,7 @@
     >
         <div :class="classObject" class="max-w-screen-sm">
             <p class="text-body-2 py-4 px-7 lg:px-14">
-                {{ text }}
+                {{ content }}
             </p>
         </div>
     </div>
@@ -13,8 +13,9 @@
 
 <script setup>
 const { userIsSender } = defineProps({
-    text: String,
+    content: String,
     userIsSender: Boolean,
+    messageType: String,
 });
 
 const classObject = computed(() => [

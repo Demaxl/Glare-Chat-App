@@ -92,29 +92,6 @@ const recentContacts = computed(() => {
 
 const { sendWithResponse, open } = useWebSocketStore();
 
-// Watch for incoming messages
-// watch(
-//     () => data.value,
-//     () => {
-//         console.log(data);
-
-//         const response = deserialize(data.value);
-//         switch (response.type) {
-//             case "chat.recent_messages":
-//                 recentMessages.value = response.recent_messages;
-//                 break;
-//             case "chat.intial_messages":
-//                 console.log(response.initial_messages);
-//                 break;
-//             case "chat.message":
-//                 console.log(response.message);
-//                 break;
-//             default:
-//                 break;
-//         }
-//     }
-// );
-
 // Get recent messages of user after connection
 async function getRecentMessages() {
     try {

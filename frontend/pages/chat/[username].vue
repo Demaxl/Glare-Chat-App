@@ -14,10 +14,12 @@
                     alt="Message Icon"
                 />
                 <div class="flex flex-col">
-                    <span class="text-body-1 font-semibold text-glare-black"
-                        >Suzana Colin</span
+                    <span class="text-body-1 font-semibold text-glare-black">{{
+                        useRoute().params.username
+                    }}</span>
+                    <span class="text-caption text-glare-gray"
+                        >@{{ useRoute().params.username }}</span
                     >
-                    <span class="text-caption text-glare-gray">@suzana</span>
                 </div>
             </div>
         </div>
@@ -29,19 +31,7 @@
                 <MessageItem
                     v-for="message in messages"
                     :key="message.id"
-                    :text="message.text"
-                    :userIsSender="message.userIsSender"
-                />
-                <MessageItem
-                    v-for="message in messages"
-                    :key="message.id"
-                    :text="message.text"
-                    :userIsSender="message.userIsSender"
-                />
-                <MessageItem
-                    v-for="message in messages"
-                    :key="message.id"
-                    :text="message.text"
+                    :content="message.content"
                     :userIsSender="message.userIsSender"
                 />
             </div>
@@ -79,31 +69,36 @@ definePageMeta({
     layout: "chat",
 });
 
-const messages = [
-    {
-        text: "next time you'll be awake at this hour why not now",
-        userIsSender: false,
-    },
-    {
-        text: `Didn't I tell you not to put your phone on charge just because it's the weekend?`,
-        userIsSender: false,
-    },
-    {
-        text: "i woke up calmnnn i put it on the charger the phone was turned off next to me i took it out while i was sleeping hsadfkagshdfgsajf i slept early girl i slept at 3",
-        userIsSender: true,
-    },
-    {
-        text: "While you win in love, you continue to win in other things dhdhdhdh",
-        userIsSender: true,
-    },
-];
-
+const { userData } = useAuthStore();
 const messagesContainer = useTemplateRef("messages-container");
 const { y: messagesContainerScrollY } = useScroll(messagesContainer, {
     behavior: "smooth",
 });
+const { sendWithResponse } = useWebSocketStore();
 
-onMounted(() => {
+const messages = ref(null);
+
+onMounted(async () => {
+    const initialMessages = await sendWithResponse(
+        "chat.initial_messages",
+        useRoute().params.username
+    );
+    messages.value = initialMessages.initial_messages.map((message) => {
+        let res = {};
+
+        switch (message.message_type) {
+            case "text":
+                res.content = message.content;
+                res.userIsSender = message.sender === userData.username;
+                res.messageType = "text";
+                break;
+            default:
+                break;
+        }
+
+        return res;
+    });
+
     messagesContainerScrollY.value = messagesContainer.value.scrollHeight;
 });
 </script>
