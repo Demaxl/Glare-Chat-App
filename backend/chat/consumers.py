@@ -1,6 +1,7 @@
 # chat/consumers.py
 import json
 
+from pprint import pprint
 from django.shortcuts import get_object_or_404
 from django.core.exceptions import ValidationError
 from django.contrib.auth import get_user_model
@@ -100,14 +101,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
                 message_obj = await self.save_message(message, receiver)
 
+                # print(MessageSerializer(message_obj).data)
                 # Send to the receiver's personal group
                 await self.channel_layer.group_send(
                     f"chat_{receiver_username}",
                     {
-                        "type": "chat_message",
-                        "message": message,
-                        "sender": self.user.username,
-                        "timestamp": message_obj.timestamp.isoformat()
+                        "type": "chat.message",
+                        **MessageSerializer(message_obj).data
                     }
                 )
 
@@ -143,9 +143,4 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     async def chat_message(self, event):
         # Send the message to the WebSocket
-        await self.send(text_data=json.dumps({
-            "type": "chat.message",
-            "message": event["message"],
-            "sender": event["sender"],
-            "timestamp": event['timestamp']
-        }))
+        await self.send(text_data=json.dumps(event))

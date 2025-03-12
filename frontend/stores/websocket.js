@@ -3,11 +3,8 @@ export const useWebSocketStore = defineStore("websocket", () => {
         public: { websocketURL },
     } = useRuntimeConfig();
 
-    // Current status of websocket instance
-    const status = ref(null);
-
-    // Holds the data returned from the server
-    const data = ref(null);
+    // Contains the latest cleaned data from the websocket
+    const messageData = ref(null);
 
     // Add a new map to store message promises
     const messagePromises = new Map();
@@ -15,7 +12,7 @@ export const useWebSocketStore = defineStore("websocket", () => {
 
     // Add message handler to websocket options
     const {
-        status: wsStatus,
+        status,
         data: wsData,
         send: wsSend,
         open,
@@ -33,10 +30,6 @@ export const useWebSocketStore = defineStore("websocket", () => {
         },
         onMessage() {
             const response = deserialize(wsData.value);
-            // console.log(response);
-            // console.log(messagePromises);
-            // console.log(response.messageId);
-            // console.log(messagePromises);
 
             // Resolve the promise if we have a matching messageId
             if (response.messageId && messagePromises.has(response.messageId)) {
@@ -49,13 +42,18 @@ export const useWebSocketStore = defineStore("websocket", () => {
         },
     });
 
-    // Update local refs when websocket values change
-    watch(wsStatus, (newStatus) => {
-        status.value = newStatus;
-    });
-
     watch(wsData, (newData) => {
-        data.value = newData;
+        // Update the cleaned data state with new data from the websocket
+        let cleaned = deserialize(newData);
+
+        switch (cleaned.type) {
+            case "chat.message":
+                messageData.value = cleaned;
+                break;
+
+            default:
+                break;
+        }
     });
 
     // Helper function to deserialize the websocket response message
@@ -118,8 +116,7 @@ export const useWebSocketStore = defineStore("websocket", () => {
         send: wsSend,
         sendWithResponse,
         open,
-        data,
-        status,
+        data: messageData,
         close,
     };
 });

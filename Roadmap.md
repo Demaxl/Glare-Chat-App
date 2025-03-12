@@ -1,2 +1,4 @@
 -   fix actions pytest issue
 -   add loading spinner to chatlist items
+-   add active chat indicator
+-   add spinner to load initial messages

@@ -55,6 +55,8 @@ const { userData } = useAuthStore();
 const recentMessages = ref([]);
 // Goes through all recent messages to return the list of recently contacted users
 const recentContacts = computed(() => {
+    // console.log(recentMessages.value);
+
     const contacts = [];
     const chosen = new Set();
 
@@ -90,7 +92,9 @@ const recentContacts = computed(() => {
     return contacts;
 });
 
-const { sendWithResponse, open } = useWebSocketStore();
+const wsStore = useWebSocketStore();
+const { sendWithResponse, open } = wsStore;
+const { data } = storeToRefs(wsStore);
 
 // Get recent messages of user after connection
 async function getRecentMessages() {
@@ -102,9 +106,16 @@ async function getRecentMessages() {
     }
 }
 
-// Open the websocket connection
-open();
-getRecentMessages();
+// Listen for new messages
+watch(data, (newData) => {
+    recentMessages.value.unshift(newData);
+});
+
+onMounted(() => {
+    // Open the websocket connection
+    open();
+    getRecentMessages();
+});
 </script>
 
 <style>

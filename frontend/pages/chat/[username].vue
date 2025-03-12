@@ -29,7 +29,7 @@
         >
             <div class="space-y-2 pt-16">
                 <MessageItem
-                    v-for="message in messages"
+                    v-for="message in messagesItemDisplay"
                     :key="message.id"
                     :content="message.content"
                     :userIsSender="message.userIsSender"
@@ -74,16 +74,14 @@ const messagesContainer = useTemplateRef("messages-container");
 const { y: messagesContainerScrollY } = useScroll(messagesContainer, {
     behavior: "smooth",
 });
-const { sendWithResponse } = useWebSocketStore();
+const wsStore = useWebSocketStore();
+const { sendWithResponse } = wsStore;
+const { data } = storeToRefs(wsStore);
 
-const messages = ref(null);
+const messages = ref([]);
 
-onMounted(async () => {
-    const initialMessages = await sendWithResponse(
-        "chat.initial_messages",
-        useRoute().params.username
-    );
-    messages.value = initialMessages.initial_messages.map((message) => {
+const messagesItemDisplay = computed(() => {
+    return messages.value.map((message) => {
         let res = {};
 
         switch (message.message_type) {
@@ -98,7 +96,20 @@ onMounted(async () => {
 
         return res;
     });
+});
 
+// Listen for new messages
+watch(data, (newData) => {
+    messages.value.push(newData);
+});
+
+onMounted(async () => {
+    const initialMessages = await sendWithResponse(
+        "chat.initial_messages",
+        useRoute().params.username
+    );
+    messages.value = initialMessages.initial_messages;
+    await nextTick();
     messagesContainerScrollY.value = messagesContainer.value.scrollHeight;
 });
 </script>
