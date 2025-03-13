@@ -1,5 +1,9 @@
 <template>
-    <nuxt-link :to="`/chat/${username}`" class="block">
+    <nuxt-link
+        :to="`/chat/${username}`"
+        class="block transition-all hover:bg-gray-200 rounded-lg hover:-m-4 hover:-mr-1 hover:p-4 hover:pr-1"
+        exact-active-class="bg-gray-300 -m-4 -mr-1 p-4 pr-1 "
+    >
         <div
             class="flex items-center text-glare-gray transition-colors cursor-pointer"
         >
