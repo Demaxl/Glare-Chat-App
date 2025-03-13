@@ -115,6 +115,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     **MessageSerializer(message_obj).data
                 }))
 
+            case "chat.search":
+                response = {
+                    "messageId": message_id,
+                    "type": "chat.search",
+                    "users": await self.search_users(text_data_json.get("query"))
+                }
+
+                await self.send(text_data=json.dumps(response))
+
     @database_sync_to_async
     def get_messages(self, sender, receiver):
         # Get the messages between the sender and receiver
@@ -133,6 +142,34 @@ class ChatConsumer(AsyncWebsocketConsumer):
         ).order_by('-timestamp')
         s = MessageSerializer(queryset, many=True)
         return s.data
+
+    @database_sync_to_async
+    def search_users(self, query):
+        """ Search for users that match the query and return their latest message """
+        if not query:
+            return []
+
+        users = []
+        for searched_user in User.objects.filter(
+                username__icontains=query):
+            data = {
+                "username": searched_user.username,
+                "latest_message": None
+            }
+
+            # Get the latest message between the user and searched_user
+            latest_message = Message.objects.filter(
+                Q(sender=self.user, receiver=searched_user) |
+                Q(sender=searched_user, receiver=self.user)
+            ).order_by('timestamp').last()
+
+            if latest_message:
+                data["latest_message"] = MessageSerializer(
+                    latest_message).data
+
+            users.append(data)
+
+        return users
 
     @database_sync_to_async
     def save_message(self, message, receiver):

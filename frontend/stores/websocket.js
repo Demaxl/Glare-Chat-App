@@ -66,6 +66,7 @@ export const useWebSocketStore = defineStore("websocket", () => {
         type = "chat.message",
         receiver = null,
         message = null,
+        query = null,
     } = {}) {
         const messageId = messageCounter++;
         const payload = { type, messageId };
@@ -77,6 +78,10 @@ export const useWebSocketStore = defineStore("websocket", () => {
             case "chat.initial_messages":
                 payload.receiver = receiver;
                 break;
+            case "chat.search":
+                payload.query = query;
+                break;
+
             default:
                 break;
         }
@@ -98,11 +103,13 @@ export const useWebSocketStore = defineStore("websocket", () => {
         type = "chat.message",
         receiver = null,
         message = null,
+        query = null,
     } = {}) {
         const { messageId, serialized } = serialize({
             type,
             receiver,
             message,
+            query,
         });
 
         const messagePromise = new Promise((resolve, reject) => {

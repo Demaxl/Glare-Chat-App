@@ -24,7 +24,9 @@
                     <input
                         class="mx-auto text-button-2 block w-full rounded-3xl border placeholder:text-[#C7C3C3] border-[#E8E8E8] py-3 pl-14 pr-9"
                         type="text"
-                        placeholder="Search people or messages"
+                        placeholder="Search people"
+                        @input="debouncedUserSearch"
+                        v-model="searchQuery"
                     />
                 </div>
 
@@ -92,6 +94,8 @@ const recentContacts = computed(() => {
     return contacts;
 });
 
+const searchQuery = ref(null);
+
 const wsStore = useWebSocketStore();
 const { sendWithResponse, open } = wsStore;
 const { data } = storeToRefs(wsStore);
@@ -107,6 +111,22 @@ async function getRecentMessages() {
         console.error("Failed to get recent messages:", error);
     }
 }
+
+async function search() {
+    try {
+        const response = await sendWithResponse({
+            type: "chat.search",
+            query: searchQuery.value,
+        });
+        console.log(response);
+    } catch (error) {
+        console.error("Failed to search for user:", error);
+    }
+}
+
+const debouncedUserSearch = useDebounceFn(() => {
+    search();
+}, 500);
 
 // Listen for new messages
 watch(data, (newData) => {
