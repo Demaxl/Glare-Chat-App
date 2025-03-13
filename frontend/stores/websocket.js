@@ -62,7 +62,11 @@ export const useWebSocketStore = defineStore("websocket", () => {
     }
 
     // Modified serialize function to include a message ID
-    function serialize(type = "chat.message", receiver = null, message = null) {
+    function serialize({
+        type = "chat.message",
+        receiver = null,
+        message = null,
+    } = {}) {
         const messageId = messageCounter++;
         const payload = { type, messageId };
         switch (type) {
@@ -79,19 +83,27 @@ export const useWebSocketStore = defineStore("websocket", () => {
         return { messageId, serialized: JSON.stringify(payload) };
     }
 
-    function send(type = "chat.message", receiver = null, message = null) {
-        let { serialized } = serialize(type, receiver, message);
+    function send({
+        type = "chat.message",
+        receiver = null,
+        message = null,
+    } = {}) {
+        let { serialized } = serialize({ type, receiver, message });
 
         wsSend(serialized);
     }
 
     // New async send function that returns a promise
-    async function sendWithResponse(
+    async function sendWithResponse({
         type = "chat.message",
         receiver = null,
-        message = null
-    ) {
-        const { messageId, serialized } = serialize(type, receiver, message);
+        message = null,
+    } = {}) {
+        const { messageId, serialized } = serialize({
+            type,
+            receiver,
+            message,
+        });
 
         const messagePromise = new Promise((resolve, reject) => {
             // Store the promise callbacks

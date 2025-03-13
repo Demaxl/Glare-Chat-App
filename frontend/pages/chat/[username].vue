@@ -104,7 +104,11 @@ const messagesItemDisplay = computed(() => {
 
 function sendMessage() {
     if (messageInput.value) {
-        send("chat.message", useRoute().params.username, messageInput.value);
+        send({
+            type: "chat.message",
+            receiver: useRoute().params.username,
+            message: messageInput.value,
+        });
         messageInput.value = "";
     }
 }
@@ -117,10 +121,10 @@ watch(data, async (newData) => {
 });
 
 onMounted(async () => {
-    const initialMessages = await sendWithResponse(
-        "chat.initial_messages",
-        useRoute().params.username
-    );
+    const initialMessages = await sendWithResponse({
+        type: "chat.initial_messages",
+        receiver: useRoute().params.username,
+    });
     messages.value = initialMessages.initial_messages;
     await nextTick();
     messagesContainerScrollY.value = messagesContainer.value.scrollHeight;

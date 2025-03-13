@@ -99,7 +99,9 @@ const { data } = storeToRefs(wsStore);
 // Get recent messages of user after connection
 async function getRecentMessages() {
     try {
-        const response = await sendWithResponse("chat.recent_messages");
+        const response = await sendWithResponse({
+            type: "chat.recent_messages",
+        });
         recentMessages.value = response.recent_messages;
     } catch (error) {
         console.error("Failed to get recent messages:", error);
