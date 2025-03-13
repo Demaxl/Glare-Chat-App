@@ -5,6 +5,9 @@
         },
         {
             "path": "backend"
+        },
+        {
+            "path": "../CareerConnect Web App/frontend"
         }
     ],
     "settings": {

@@ -110,6 +110,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
                         **MessageSerializer(message_obj).data
                     }
                 )
+                await self.send(text_data=json.dumps({
+                    "type": "chat.message",
+                    **MessageSerializer(message_obj).data
+                }))
 
     @database_sync_to_async
     def get_messages(self, sender, receiver):

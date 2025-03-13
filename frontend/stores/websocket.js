@@ -80,7 +80,9 @@ export const useWebSocketStore = defineStore("websocket", () => {
     }
 
     function send(type = "chat.message", receiver = null, message = null) {
-        wsSend(serialize(type, message, receiver));
+        let { serialized } = serialize(type, receiver, message);
+
+        wsSend(serialized);
     }
 
     // New async send function that returns a promise
@@ -113,7 +115,7 @@ export const useWebSocketStore = defineStore("websocket", () => {
     }
 
     return {
-        send: wsSend,
+        send,
         sendWithResponse,
         open,
         data: messageData,

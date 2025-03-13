@@ -53,10 +53,13 @@
                 type="text"
                 class="shadow-[0px_0px_1px_0px_#00000040] focus:outline-primary border block grow rounded-3xl px-6 py-3 h-10 max-w-[850px] text-body-2"
                 placeholder="Type a messsage"
+                v-model="messageInput"
+                @keyup.enter="sendMessage"
             />
 
             <button
                 class="text-primary p-3 rounded-full hover:bg-[#eee] transition-colors"
+                @click="sendMessage"
             >
                 <Icon class="align-middle" name="iconoir:send" size="24px" />
             </button>
@@ -75,10 +78,11 @@ const { y: messagesContainerScrollY } = useScroll(messagesContainer, {
     behavior: "smooth",
 });
 const wsStore = useWebSocketStore();
-const { sendWithResponse } = wsStore;
+const { sendWithResponse, send } = wsStore;
 const { data } = storeToRefs(wsStore);
 
 const messages = ref([]);
+const messageInput = ref(null);
 
 const messagesItemDisplay = computed(() => {
     return messages.value.map((message) => {
@@ -98,9 +102,18 @@ const messagesItemDisplay = computed(() => {
     });
 });
 
+function sendMessage() {
+    if (messageInput.value) {
+        send("chat.message", useRoute().params.username, messageInput.value);
+        messageInput.value = "";
+    }
+}
+
 // Listen for new messages
-watch(data, (newData) => {
+watch(data, async (newData) => {
     messages.value.push(newData);
+    await nextTick();
+    messagesContainerScrollY.value = messagesContainer.value.scrollHeight;
 });
 
 onMounted(async () => {
