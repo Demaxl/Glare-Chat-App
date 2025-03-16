@@ -36,7 +36,7 @@
                         />
                     </div>
                 </div>
-                <div class="flex justify-between">
+                <div class="flex justify-between relative items-center">
                     <div class="flex">
                         <img
                             class="w-9 h-9 mr-3"
@@ -54,8 +54,12 @@
                         </div>
                     </div>
                     <button
-                        class="p-3 rounded-full font-bold hover:bg-[#eee] transition-colors"
-                        @click="sendMessage"
+                        :class="{
+                            'bg-[#eee]': isProfileDropdownOpen,
+                            'bg-transparent': !isProfileDropdownOpen,
+                        }"
+                        class="p-2 font-bold hover:bg-[#eee] rounded transition-colors"
+                        @click="toggleDropdown()"
                     >
                         <Icon
                             class="align-middle"
@@ -63,6 +67,22 @@
                             size="24px"
                         />
                     </button>
+                    <Transition
+                        enter-active-class="animate__animated animate__fadeInUp "
+                        leave-active-class="animate__animated animate__fadeOutDown"
+                    >
+                        <div
+                            v-show="isProfileDropdownOpen"
+                            class="absolute right-0 rounded-lg z-10 -top-[110%] border border-[#E8E8E8] shadow-[0px_4px_4px_0px_#0000000A]"
+                        >
+                            <nuxt-link
+                                to="/logout"
+                                class="text-red-600 block p-3 rounded font-bold transition-colors hover:bg-[#eee] text-button-3"
+                            >
+                                Sign out
+                            </nuxt-link>
+                        </div>
+                    </Transition>
                 </div>
             </div>
             <div
@@ -78,6 +98,7 @@
 <script setup>
 const route = useRoute();
 const isChatView = computed(() => route.name === "chat");
+const [isProfileDropdownOpen, toggleDropdown] = useToggle(false);
 
 const { userData } = useAuthStore();
 
@@ -182,10 +203,14 @@ onMounted(() => {
 });
 </script>
 
-<style>
+<style scoped>
 .nuxt-icon svg {
     margin-bottom: 0;
     width: auto;
     height: auto;
+}
+
+.animate__animated {
+    --animate-duration: 0.3s;
 }
 </style>
