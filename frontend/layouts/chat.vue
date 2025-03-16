@@ -2,8 +2,8 @@
     <div class="w-full">
         <div class="flex h-screen">
             <div
-                :class="{ 'hidden md:block': isChatView }"
-                class="bg-[#FAFAFA] basis-full flex flex-col justify-between md:max-w-[400px] md:basis-1/4 p-6 pr-2 relative"
+                :class="{ 'hidden md:flex': isChatView, flex: !isChatView }"
+                class="bg-[#FAFAFA] basis-full flex-col justify-between md:max-w-[400px] md:basis-1/4 p-6 pr-2 relative"
             >
                 <div>
                     <nuxt-link to="/">
@@ -97,7 +97,7 @@
 
 <script setup>
 const route = useRoute();
-const isChatView = computed(() => route.name === "chat");
+const isChatView = computed(() => route.name === "chat-username");
 const [isProfileDropdownOpen, toggleDropdown] = useToggle(false);
 
 const { userData } = useAuthStore();
