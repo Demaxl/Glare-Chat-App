@@ -118,14 +118,29 @@ async function search() {
             type: "chat.search",
             query: searchQuery.value,
         });
-        console.log(response);
+        recentMessages.value = response.users.map((user) => {
+            if (!user.latest_message) {
+                return {
+                    sender: user.username,
+                    receiver: userData.username,
+                    content: "Start new chat",
+                    timestamp: new Date().toISOString(),
+                };
+            }
+            return user.latest_message;
+        });
     } catch (error) {
         console.error("Failed to search for user:", error);
     }
 }
 
 const debouncedUserSearch = useDebounceFn(() => {
-    search();
+    // If the search query is empty, get recent messages
+    if (searchQuery.value) {
+        search();
+    } else {
+        getRecentMessages();
+    }
 }, 500);
 
 // Listen for new messages
