@@ -21,6 +21,7 @@
                             class="block absolute top-3 left-4"
                         />
                         <input
+                            ref="searchInput"
                             class="mx-auto text-button-2 block w-full rounded-3xl border placeholder:text-[#C7C3C3] border-[#E8E8E8] py-3 pl-14 pr-9"
                             type="text"
                             placeholder="Search people"
@@ -99,6 +100,7 @@
 const route = useRoute();
 const isChatView = computed(() => route.name === "chat-username");
 const [isProfileDropdownOpen, toggleDropdown] = useToggle(false);
+const { searchInput } = useSearchFocus();
 
 const { userData } = useAuthStore();
 

@@ -7,6 +7,7 @@
             </p>
 
             <button
+                @click="focusSearch"
                 class="py-[18px] px-12 bg-primary hover:bg-glare-dark-green transition-colors tracking-wide text-button-2 rounded-[100px] text-white"
             >
                 New Message
@@ -19,4 +20,6 @@
 definePageMeta({
     layout: "chat",
 });
+
+const { focusSearch } = useSearchFocus();
 </script>
