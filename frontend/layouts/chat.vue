@@ -29,13 +29,15 @@
                             v-model="searchQuery"
                         />
                     </div>
-                    <div class="space-y-6">
+                    <!-- <div class="space-y-6"> -->
+                    <TransitionGroup name="list" tag="div" class="space-y-6">
                         <ChatListItem
                             v-for="(message, index) in recentContacts"
                             :key="index"
                             v-bind="message"
                         />
-                    </div>
+                    </TransitionGroup>
+                    <!-- </div> -->
                 </div>
                 <div class="flex justify-between relative items-center">
                     <div class="flex">
@@ -214,5 +216,21 @@ onMounted(() => {
 
 .animate__animated {
     --animate-duration: 0.3s;
+}
+.list-move, /* apply transition to moving elements */
+.list-enter-active,
+.list-leave-active {
+    transition: all 0.5s ease;
+}
+.list-enter-from,
+.list-leave-to {
+    opacity: 0;
+    transform: translateX(30px);
+}
+
+/* ensure leaving items are taken out of layout flow so that moving
+   animations can be calculated correctly. */
+.list-leave-active {
+    position: absolute;
 }
 </style>
