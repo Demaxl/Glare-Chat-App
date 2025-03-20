@@ -28,7 +28,16 @@
                     <p
                         class="text-[10px] leading-4 truncate md:max-w-[250px] max-w-[250px] sm:max-w-[500px]"
                     >
-                        <span v-if="userIsSender">You:</span> {{ message }}
+                        <span v-if="userIsSender">You:</span>
+                        <span v-if="messageType === 'image'">
+                            <Icon
+                                name="uil:image"
+                                size="15px"
+                                class="align-middle"
+                            ></Icon>
+                            Image
+                        </span>
+                        <span v-else>{{ message }}</span>
                     </p>
                 </div>
             </div>
@@ -46,6 +55,7 @@ const { timestamp } = defineProps({
     message: String,
     messageIsSelf: Boolean,
     userIsSender: Boolean,
+    messageType: String,
     timestamp: String,
 });
 

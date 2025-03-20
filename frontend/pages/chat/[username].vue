@@ -33,6 +33,7 @@
                     :key="message.id"
                     :content="message.content"
                     :userIsSender="message.userIsSender"
+                    :messageType="message.messageType"
                 />
             </div>
         </div>
@@ -91,15 +92,9 @@ const messagesItemDisplay = computed(() => {
     return messages.value.map((message) => {
         let res = {};
 
-        switch (message.message_type) {
-            case "text":
-                res.content = message.content;
-                res.userIsSender = message.sender === userData.username;
-                res.messageType = "text";
-                break;
-            default:
-                break;
-        }
+        res.content = message.content;
+        res.userIsSender = message.sender === userData.username;
+        res.messageType = message.message_type;
 
         return res;
     });

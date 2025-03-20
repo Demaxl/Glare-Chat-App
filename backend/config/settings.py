@@ -233,6 +233,15 @@ SITE_ID = 1
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+# For local development
+MEDIA_URL_BASE = 'http://localhost:8000'
+
+# # For production (example with S3)
+# MEDIA_URL_BASE = 'https://your-bucket.s3.amazonaws.com'
+
+# # For CDN
+# MEDIA_URL_BASE = 'https://your-cdn.cloudfront.net'
+
 
 CHANNEL_LAYERS = {
     "default": {

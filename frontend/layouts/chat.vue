@@ -139,6 +139,7 @@ const recentContacts = computed(() => {
             userIsSender,
             messageIsSelf,
             message: message.content,
+            messageType: message.message_type,
             timestamp: message.timestamp,
         });
         chosen.add(username);
