@@ -50,6 +50,7 @@
                 />
             </button>
             <input
+                ref="message-input"
                 type="text"
                 class="shadow-[0px_0px_1px_0px_#00000040] focus:outline-primary border block grow rounded-3xl px-6 py-3 h-10 max-w-[850px] text-body-2"
                 placeholder="Type a messsage"
@@ -83,6 +84,8 @@ const { data } = storeToRefs(wsStore);
 
 const messages = ref([]);
 const messageInput = ref(null);
+
+const messageInputRef = useTemplateRef("message-input");
 
 const messagesItemDisplay = computed(() => {
     return messages.value.map((message) => {
@@ -128,5 +131,7 @@ onMounted(async () => {
     messages.value = initialMessages.initial_messages;
     await nextTick();
     messagesContainerScrollY.value = messagesContainer.value.scrollHeight;
+
+    messageInputRef.value.focus();
 });
 </script>
