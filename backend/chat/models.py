@@ -47,6 +47,19 @@ class Message(models.Model):
                 AudioMessage.objects.create(
                     message=self, audio=value)
 
+    @classmethod
+    def related_objects(cls):
+        """
+        Returns a queryset with all message content types prefetched.
+        This optimizes database queries when accessing message content.
+        """
+        return cls.objects.prefetch_related(
+            'text_content',
+            'image_content',
+            'video_content',
+            'audio_content'
+        ).select_related('sender', 'receiver')
+
 
 class MessageTypeAbstract(models.Model):
 

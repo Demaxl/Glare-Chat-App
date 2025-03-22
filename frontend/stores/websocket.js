@@ -61,55 +61,25 @@ export const useWebSocketStore = defineStore("websocket", () => {
         return JSON.parse(message);
     }
 
-    // Modified serialize function to include a message ID
-    function serialize({
-        type = "chat.message",
-        receiver = null,
-        message = null,
-        query = null,
-    } = {}) {
+    // Modified serialize function to include a message ID and accept any parameters
+    function serialize({ type = "chat.message", ...params } = {}) {
         const messageId = messageCounter++;
-        const payload = { type, messageId };
-        switch (type) {
-            case "chat.message":
-                payload.message = message;
-                payload.receiver = receiver;
-                break;
-            case "chat.initial_messages":
-                payload.receiver = receiver;
-                break;
-            case "chat.search":
-                payload.query = query;
-                break;
+        const payload = { type, messageId, ...params };
 
-            default:
-                break;
-        }
+        // Remove specific case handling since we're now passing all params directly
         return { messageId, serialized: JSON.stringify(payload) };
     }
 
-    function send({
-        type = "chat.message",
-        receiver = null,
-        message = null,
-    } = {}) {
-        let { serialized } = serialize({ type, receiver, message });
-
+    function send({ type = "chat.message", ...params } = {}) {
+        let { serialized } = serialize({ type, ...params });
         wsSend(serialized);
     }
 
     // New async send function that returns a promise
-    async function sendWithResponse({
-        type = "chat.message",
-        receiver = null,
-        message = null,
-        query = null,
-    } = {}) {
+    async function sendWithResponse({ type = "chat.message", ...params } = {}) {
         const { messageId, serialized } = serialize({
             type,
-            receiver,
-            message,
-            query,
+            ...params,
         });
 
         const messagePromise = new Promise((resolve, reject) => {

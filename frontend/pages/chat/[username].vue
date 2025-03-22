@@ -42,8 +42,17 @@
             class="h-16 flex items-center sm:space-x-3 justify-between md:space-x-11 py-5 md:mx-9 absolute right-0 left-0 bottom-0"
         >
             <button
+                title="Upload Image"
                 class="text-primary p-3 rounded-full hover:bg-[#eee] transition-colors"
+                @click="triggerImageUpload"
             >
+                <input
+                    type="file"
+                    ref="fileInput"
+                    accept="image/*"
+                    class="hidden"
+                    @change="handleImageSelect"
+                />
                 <Icon
                     class="align-middle"
                     name="uil:image-upload"
@@ -60,6 +69,7 @@
             />
 
             <button
+                title="Send Message"
                 class="text-primary p-3 rounded-full hover:bg-[#eee] transition-colors"
                 @click="sendMessage"
             >
@@ -79,6 +89,7 @@ const messagesContainer = useTemplateRef("messages-container");
 const { y: messagesContainerScrollY } = useScroll(messagesContainer, {
     behavior: "smooth",
 });
+const { $axios } = useNuxtApp();
 const wsStore = useWebSocketStore();
 const { sendWithResponse, send } = wsStore;
 const { data } = storeToRefs(wsStore);
@@ -87,6 +98,7 @@ const messages = ref([]);
 const messageInput = ref(null);
 
 const messageInputRef = useTemplateRef("message-input");
+const fileInput = useTemplateRef("fileInput");
 
 const messagesItemDisplay = computed(() => {
     return messages.value.map((message) => {
@@ -100,6 +112,46 @@ const messagesItemDisplay = computed(() => {
     });
 });
 
+async function loadNewMessage(message) {
+    messages.value.push(message);
+    await nextTick();
+    messagesContainerScrollY.value = messagesContainer.value.scrollHeight;
+}
+
+// Listen for new messages
+watch(data, (newData) => {
+    loadNewMessage(newData);
+});
+
+function triggerImageUpload() {
+    fileInput.value.click();
+}
+
+async function handleImageSelect(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Create FormData to send the image
+    const formData = new FormData();
+    formData.append("image", file);
+    formData.append("receiver", useRoute().params.username);
+
+    // Send the image through axios
+    const response = await $axios.post("/api/upload-image", formData, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+    });
+    // Add the image to the messages
+    loadNewMessage(response.data);
+
+    // Send the image through websocket
+    send({
+        type: "chat.image_message",
+        messagePk: response.data.id,
+    });
+}
+
 function sendMessage() {
     if (messageInput.value) {
         send({
@@ -110,13 +162,6 @@ function sendMessage() {
         messageInput.value = "";
     }
 }
-
-// Listen for new messages
-watch(data, async (newData) => {
-    messages.value.push(newData);
-    await nextTick();
-    messagesContainerScrollY.value = messagesContainer.value.scrollHeight;
-});
 
 onMounted(async () => {
     const initialMessages = await sendWithResponse({
