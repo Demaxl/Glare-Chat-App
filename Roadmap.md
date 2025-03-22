@@ -2,4 +2,3 @@
 -   add loading spinner to chatlist items
 -   add active chat indicator
 -   add spinner to load initial messages
--   fix issue of missing csrf token on initial load
