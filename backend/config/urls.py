@@ -25,6 +25,7 @@ urlpatterns = [
     # Include the API endpoints:
     path("_allauth/", include("allauth.headless.urls")),
     path("auth/", include("users.urls")),
+    path("api/", include("chat.urls")),
 
 ]
 

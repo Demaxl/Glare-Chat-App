@@ -51,6 +51,13 @@ class ChatConsumer(AsyncWebsocketConsumer):
         except get_user_model().DoesNotExist:
             return None
 
+    @database_sync_to_async
+    def get_message(self, message_pk) -> Message:
+        try:
+            return Message.related_objects().get(pk=message_pk)
+        except Message.DoesNotExist:
+            return None
+
     async def send_error(self, error):
         await self.send(text_data=json.dumps({
             "type": "chat.error",
@@ -115,6 +122,30 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     **MessageSerializer(message_obj).data
                 }))
 
+            case "chat.image_message":
+                message = await self.get_message(text_data_json.get("messagePk"))
+
+                if message is None:
+                    await self.send_error("Message not found")
+                    return
+
+                if message.sender != self.user:
+                    await self.send_error("You are not the sender of this message")
+                    return
+
+                if message.message_type != Message.IMAGE:
+                    await self.send_error("Invalid message type")
+                    return
+
+                # Send the image to the receiver
+                await self.channel_layer.group_send(
+                    f"chat_{message.receiver.username}",
+                    {
+                        "type": "chat.message",
+                        **MessageSerializer(message).data
+                    }
+                )
+
             case "chat.search":
                 response = {
                     "messageId": message_id,
@@ -127,7 +158,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def get_messages(self, sender, receiver):
         # Get the messages between the sender and receiver
-        queryset = Message.objects.filter(
+        queryset = Message.related_objects().filter(
             Q(sender=sender, receiver=receiver) |
             Q(sender=receiver, receiver=sender)
         ).order_by('timestamp')
@@ -137,7 +168,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def get_recent_messages(self):
         # Get the recent messages sent by or to the user
-        queryset = Message.objects.filter(
+        queryset = Message.related_objects().filter(
             Q(sender=self.user) | Q(receiver=self.user)
         ).order_by('-timestamp')
         s = MessageSerializer(queryset, many=True)
@@ -158,7 +189,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             }
 
             # Get the latest message between the user and searched_user
-            latest_message = Message.objects.filter(
+            latest_message = Message.related_objects().filter(
                 Q(sender=self.user, receiver=searched_user) |
                 Q(sender=searched_user, receiver=self.user)
             ).order_by('timestamp').last()

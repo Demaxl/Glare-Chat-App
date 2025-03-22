@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
 from .models import Message, TextMessage, AudioMessage, VideoMessage, ImageMessage
+from django.conf import settings
 
 
 class TextMessageSerializer(serializers.ModelSerializer):
@@ -59,7 +60,10 @@ class MessageSerializer(serializers.ModelSerializer):
             return serializer.data.get('video')
         elif obj.message_type == Message.IMAGE:
             serializer = ImageMessageSerializer(obj.image_content)
-            return serializer.data.get('image')
+            image_url = serializer.data.get('image')
+            if image_url:
+                return f"{settings.MEDIA_URL_BASE}{image_url}"
+            return None
         return None
 
     def create(self, validated_data):

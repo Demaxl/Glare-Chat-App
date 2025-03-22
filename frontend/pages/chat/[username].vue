@@ -33,6 +33,7 @@
                     :key="message.id"
                     :content="message.content"
                     :userIsSender="message.userIsSender"
+                    :messageType="message.messageType"
                 />
             </div>
         </div>
@@ -41,8 +42,17 @@
             class="h-16 flex items-center sm:space-x-3 justify-between md:space-x-11 py-5 md:mx-9 absolute right-0 left-0 bottom-0"
         >
             <button
+                title="Upload Image"
                 class="text-primary p-3 rounded-full hover:bg-[#eee] transition-colors"
+                @click="triggerImageUpload"
             >
+                <input
+                    type="file"
+                    ref="fileInput"
+                    accept="image/*"
+                    class="hidden"
+                    @change="handleImageSelect"
+                />
                 <Icon
                     class="align-middle"
                     name="uil:image-upload"
@@ -50,6 +60,7 @@
                 />
             </button>
             <input
+                ref="message-input"
                 type="text"
                 class="shadow-[0px_0px_1px_0px_#00000040] focus:outline-primary border block grow rounded-3xl px-6 py-3 h-10 max-w-[850px] text-body-2"
                 placeholder="Type a messsage"
@@ -58,6 +69,7 @@
             />
 
             <button
+                title="Send Message"
                 class="text-primary p-3 rounded-full hover:bg-[#eee] transition-colors"
                 @click="sendMessage"
             >
@@ -77,6 +89,7 @@ const messagesContainer = useTemplateRef("messages-container");
 const { y: messagesContainerScrollY } = useScroll(messagesContainer, {
     behavior: "smooth",
 });
+const { $axios } = useNuxtApp();
 const wsStore = useWebSocketStore();
 const { sendWithResponse, send } = wsStore;
 const { data } = storeToRefs(wsStore);
@@ -84,23 +97,60 @@ const { data } = storeToRefs(wsStore);
 const messages = ref([]);
 const messageInput = ref(null);
 
+const messageInputRef = useTemplateRef("message-input");
+const fileInput = useTemplateRef("fileInput");
+
 const messagesItemDisplay = computed(() => {
     return messages.value.map((message) => {
         let res = {};
 
-        switch (message.message_type) {
-            case "text":
-                res.content = message.content;
-                res.userIsSender = message.sender === userData.username;
-                res.messageType = "text";
-                break;
-            default:
-                break;
-        }
+        res.content = message.content;
+        res.userIsSender = message.sender === userData.username;
+        res.messageType = message.message_type;
 
         return res;
     });
 });
+
+async function loadNewMessage(message) {
+    messages.value.push(message);
+    await nextTick();
+    messagesContainerScrollY.value = messagesContainer.value.scrollHeight;
+}
+
+// Listen for new messages
+watch(data, (newData) => {
+    loadNewMessage(newData);
+});
+
+function triggerImageUpload() {
+    fileInput.value.click();
+}
+
+async function handleImageSelect(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Create FormData to send the image
+    const formData = new FormData();
+    formData.append("image", file);
+    formData.append("receiver", useRoute().params.username);
+
+    // Send the image through axios
+    const response = await $axios.post("/api/upload-image", formData, {
+        headers: {
+            "Content-Type": "multipart/form-data",
+        },
+    });
+    // Add the image to the messages
+    loadNewMessage(response.data);
+
+    // Send the image through websocket
+    send({
+        type: "chat.image_message",
+        messagePk: response.data.id,
+    });
+}
 
 function sendMessage() {
     if (messageInput.value) {
@@ -113,13 +163,6 @@ function sendMessage() {
     }
 }
 
-// Listen for new messages
-watch(data, async (newData) => {
-    messages.value.push(newData);
-    await nextTick();
-    messagesContainerScrollY.value = messagesContainer.value.scrollHeight;
-});
-
 onMounted(async () => {
     const initialMessages = await sendWithResponse({
         type: "chat.initial_messages",
@@ -128,5 +171,7 @@ onMounted(async () => {
     messages.value = initialMessages.initial_messages;
     await nextTick();
     messagesContainerScrollY.value = messagesContainer.value.scrollHeight;
+
+    messageInputRef.value.focus();
 });
 </script>
