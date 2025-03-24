@@ -49,7 +49,7 @@
                 <input
                     type="file"
                     ref="fileInput"
-                    accept="image/*"
+                    accept="image/jpeg, image/png, image/gif, image/webp, image/bmp"
                     class="hidden"
                     @change="handleImageSelect"
                 />
@@ -131,6 +131,22 @@ async function handleImageSelect(event) {
     const file = event.target.files[0];
     if (!file) return;
 
+    // Validate that the file is an allowed image type (excluding SVG)
+    const allowedTypes = [
+        "image/jpeg",
+        "image/png",
+        "image/gif",
+        "image/webp",
+        "image/bmp",
+    ];
+    if (!allowedTypes.includes(file.type)) {
+        alert(
+            "Please select a valid image file (JPEG, PNG, GIF, WebP, or BMP)"
+        );
+        fileInput.value.value = ""; // Clear the file input
+        return;
+    }
+
     // Create FormData to send the image
     const formData = new FormData();
     formData.append("image", file);
@@ -150,6 +166,9 @@ async function handleImageSelect(event) {
         type: "chat.image_message",
         messagePk: response.data.id,
     });
+
+    // Clear the file input for future uploads
+    fileInput.value.value = "";
 }
 
 function sendMessage() {
