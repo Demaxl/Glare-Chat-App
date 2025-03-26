@@ -123,6 +123,7 @@ celerybeat.pid
 
 # Environments
 .env
+.env.prod
 .venv
 env/
 venv/
@@ -164,3 +165,4 @@ cython_debug/
 
 google_client.json
 media/
+Glare Chat Key.pem
