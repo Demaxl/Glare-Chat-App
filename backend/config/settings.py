@@ -42,7 +42,7 @@ DEBUG = env('DEBUG')
 if DEBUG:
     ALLOWED_HOSTS = ["*"]
 else:
-    ALLOWED_HOSTS = []
+    ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -115,7 +115,10 @@ if env("POSTGRES_DB"):
             'USER': env("POSTGRES_USER"),
             'PASSWORD': env("POSTGRES_PASSWORD"),
             'HOST': env("POSTGRES_HOST"),
-            'PORT': env("POSTGRES_PORT")
+            'PORT': env("POSTGRES_PORT"),
+            'OPTIONS': {
+                'sslmode': 'require',  # Required for RDS PostgreSQL
+            }
         }
     }
 else:
