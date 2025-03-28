@@ -259,3 +259,25 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+
+STORAGES = {
+    # "default": {
+    #     "BACKEND": "storages.backends.s3.S3Storage",
+    # },
+    "staticfiles": {
+        "BACKEND": "storages.backends.s3.S3Storage",
+        "OPTIONS": {
+            "bucket_name": env("AWS_STORAGE_BUCKET_NAME"),
+            "default_acl": "public-read",
+            "location": "static",
+            "region_name": env("AWS_S3_REGION_NAME", default="eu-west-2"),
+            "custom_domain": env("AWS_S3_CUSTOM_DOMAIN", default=f"{env('AWS_STORAGE_BUCKET_NAME')}.s3.amazonaws.com"),
+        }
+    }
+}
+
+# STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/'
+
+# Collect static files here for local development
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
